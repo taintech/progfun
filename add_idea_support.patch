@@ -1,0 +1,31 @@
+Index: project/buildSettings.sbt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- project/buildSettings.sbt	(date 1411486904000)
++++ project/buildSettings.sbt	(revision )
+@@ -21,6 +21,8 @@
+ 
+ addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.1.0")
+ 
++addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
++
+ // for dependency-graph plugin
+ // net.virtualvoid.sbt.graph.Plugin.graphSettings
+ 
+Index: build.sbt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.sbt	(date 1411486904000)
++++ build.sbt	(revision )
+@@ -162,3 +162,7 @@
+ // Packages in src/test/scala that are used for grading projects. Always included
+ // compiling tests, grading a project.
+ gradingTestPackages += "grading"
++
++ideaExcludeFolders += ".idea"
++
++ideaExcludeFolders += ".idea_modules"
