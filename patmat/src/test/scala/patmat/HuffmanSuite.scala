@@ -12,6 +12,9 @@ class HuffmanSuite extends FunSuite {
   trait TestTrees {
     val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
     val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
+    val l1 = List('a', 'b', 'a')
+    val freq1 = List(('a', 2), ('b', 1))
+    val ls1 = List(Leaf('b', 1), Leaf('a', 2))
   }
 
   test("weight of a larger tree") {
@@ -46,6 +49,14 @@ class HuffmanSuite extends FunSuite {
   }
 
   test("times computes each unique character in the list") {
-    assert(times(List('a', 'b', 'a')).sorted === List(('a', 2), ('b', 1)))
+    new TestTrees {
+      assert(times(l1).sorted === freq1)
+    }
+  }
+
+  test("creates ordered leaf list") {
+    new TestTrees {
+      assert(makeOrderedLeafList(freq1) === ls1)
+    }
   }
 }
