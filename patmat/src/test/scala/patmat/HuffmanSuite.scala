@@ -44,4 +44,8 @@ class HuffmanSuite extends FunSuite {
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
+
+  test("times computes each unique character in the list") {
+    assert(times(List('a', 'b', 'a')).sorted === List(('a', 2), ('b', 1)))
+  }
 }
