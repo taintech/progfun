@@ -2,6 +2,8 @@ package patmat
 
 import common._
 
+import scala.annotation.tailrec
+
 /**
  * Assignment 4: Huffman coding
  *
@@ -111,7 +113,7 @@ object Huffman {
    * unchanged.
    */
   def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
-    case tree1 :: tree2 :: ts => Fork(tree1, tree2, chars(tree1) ++ chars(tree2), weight(tree1)+ weight(tree2)) :: ts
+    case left :: right :: ts => makeCodeTree(left, right) :: ts
     case _ => trees
   }
 
@@ -132,7 +134,11 @@ object Huffman {
    *    the example invocation. Also define the return type of the `until` function.
    *  - try to find sensible parameter names for `xxx`, `yyy` and `zzz`.
    */
-  def until(xxx: ???, yyy: ???)(zzz: ???): ??? = ???
+  @tailrec
+  def until(condition: List[CodeTree] => Boolean, reduce: List[CodeTree] => List[CodeTree])
+           (trees: List[CodeTree]): CodeTree =
+    if(singleton(trees)) trees.head else until(condition, reduce)(combine(trees))
+
 
   /**
    * This function creates a code tree which is optimal to encode the text `chars`.
@@ -140,7 +146,7 @@ object Huffman {
    * The parameter `chars` is an arbitrary text. This function extracts the character
    * frequencies from that text and creates a code tree based on them.
    */
-  def createCodeTree(chars: List[Char]): CodeTree = ???
+  def createCodeTree(chars: List[Char]): CodeTree = until(singleton, combine)(makeOrderedLeafList(times(chars)))
 
 
 

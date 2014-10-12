@@ -15,6 +15,7 @@ class HuffmanSuite extends FunSuite {
     val l1 = List('a', 'b', 'a')
     val freq1 = List(('a', 2), ('b', 1))
     val ls1 = List(Leaf('b', 1), Leaf('a', 2))
+    val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
   }
 
   test("weight of a larger tree") {
@@ -38,8 +39,9 @@ class HuffmanSuite extends FunSuite {
   }
 
   test("combine of some leaf list") {
-    val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
+    new TestTrees {
+      assert(combine(leaflist) === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
+    }
   }
 
   test("decode and encode a very short text should be identity") {
@@ -65,5 +67,15 @@ class HuffmanSuite extends FunSuite {
       assert(singleton(List(Leaf('c', 0))))
       assert(!singleton(ls1))
     }
+  }
+
+  test("combine until it is singleton") {
+    new TestTrees {
+      assert(until(singleton, combine)(leaflist) === Fork(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4), List('e', 't', 'x'), 7))
+    }
+  }
+
+  test("creates code tree for chars") {
+    assert(createCodeTree("xtxextx".toCharArray.toList) === Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e', 't', 'x'), 7))
   }
 }
