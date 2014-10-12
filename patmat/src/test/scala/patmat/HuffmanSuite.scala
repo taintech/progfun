@@ -59,4 +59,11 @@ class HuffmanSuite extends FunSuite {
       assert(makeOrderedLeafList(freq1) === ls1)
     }
   }
+
+  test("checks whether the list `trees` contains only one single code tree") {
+    new TestTrees {
+      assert(singleton(List(Leaf('c', 0))))
+      assert(!singleton(ls1))
+    }
+  }
 }
