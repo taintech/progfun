@@ -19,6 +19,7 @@ class HuffmanSuite extends FunSuite {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
     val dummyText = "xtxextx"
     val dummyCodeTree = Fork(Leaf('x', 4), Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3), List('e', 't', 'x'), 7)
+    val dummyCodeTable: CodeTable = List(('e', List(1,1)), ('t', List(1,0)), ('x', List(0)))
   }
 
   test("weight of a larger tree") {
@@ -94,6 +95,23 @@ class HuffmanSuite extends FunSuite {
     new TestTrees {
       assert(encode(dummyCodeTree)(string2Chars("xtxext")) === List(0, 1, 0, 0, 1, 1, 0, 1, 0))
       assert(encode(frenchCode)(decodedSecret) === secret)
+    }
+  }
+
+  test("gets code bits") {
+    assert(codeBits(List(('c', List(1,0,1))))('c') === List(1,0,1))
+  }
+
+  test("creates code table") {
+    new TestTrees {
+      assert(convert(dummyCodeTree) === dummyCodeTable)
+    }
+  }
+
+  test("quick encode text") {
+    new TestTrees {
+      assert(quickEncode(dummyCodeTree)(string2Chars("xtxext")) === List(0, 1, 0, 0, 1, 1, 0, 1, 0))
+      assert(quickEncode(frenchCode)(decodedSecret) === secret)
     }
   }
 }
