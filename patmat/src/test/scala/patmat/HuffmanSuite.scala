@@ -80,13 +80,20 @@ class HuffmanSuite extends FunSuite {
 
   test("creates code tree for chars") {
     new TestTrees {
-      assert(createCodeTree(dummyText.toCharArray.toList) === dummyCodeTree)
+      assert(createCodeTree(string2Chars(dummyText)) === dummyCodeTree)
     }
   }
 
   test("decode text") {
     new TestTrees {
       assert(decode(dummyCodeTree, List(0, 1, 0, 0, 1, 1, 0, 1, 0)).mkString === "xtxext")
+    }
+  }
+
+  test("encode text") {
+    new TestTrees {
+      assert(encode(dummyCodeTree)(string2Chars("xtxext")) === List(0, 1, 0, 0, 1, 1, 0, 1, 0))
+      assert(encode(frenchCode)(decodedSecret) === secret)
     }
   }
 }
