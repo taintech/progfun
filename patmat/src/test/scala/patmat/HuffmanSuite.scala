@@ -9,13 +9,16 @@ import patmat.Huffman._
 
 @RunWith(classOf[JUnitRunner])
 class HuffmanSuite extends FunSuite {
+
   trait TestTrees {
-    val t1 = Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5)
-    val t2 = Fork(Fork(Leaf('a',2), Leaf('b',3), List('a','b'), 5), Leaf('d',4), List('a','b','d'), 9)
+    val t1 = Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5)
+    val t2 = Fork(Fork(Leaf('a', 2), Leaf('b', 3), List('a', 'b'), 5), Leaf('d', 4), List('a', 'b', 'd'), 9)
     val l1 = List('a', 'b', 'a')
     val freq1 = List(('a', 2), ('b', 1))
     val ls1 = List(Leaf('b', 1), Leaf('a', 2))
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
+    val dummyText = "xtxextx"
+    val dummyCodeTree = Fork(Leaf('x', 4), Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3), List('e', 't', 'x'), 7)
   }
 
   test("weight of a larger tree") {
@@ -26,7 +29,7 @@ class HuffmanSuite extends FunSuite {
 
   test("chars of a larger tree") {
     new TestTrees {
-      assert(chars(t2) === List('a','b','d'))
+      assert(chars(t2) === List('a', 'b', 'd'))
     }
   }
 
@@ -35,12 +38,12 @@ class HuffmanSuite extends FunSuite {
   }
 
   test("makeOrderedLeafList for some frequency table") {
-    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e',1), Leaf('t',2), Leaf('x',3)))
+    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)))
   }
 
   test("combine of some leaf list") {
     new TestTrees {
-      assert(combine(leaflist) === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
+      assert(combine(leaflist) === List(Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3), Leaf('x', 4)))
     }
   }
 
@@ -71,16 +74,19 @@ class HuffmanSuite extends FunSuite {
 
   test("combine until it is singleton") {
     new TestTrees {
-      assert(until(singleton, combine)(leaflist) === Fork(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4), List('e', 't', 'x'), 7))
+      assert(until(singleton, combine)(leaflist) === dummyCodeTree)
     }
   }
 
   test("creates code tree for chars") {
-    assert(createCodeTree("xtxextx".toCharArray.toList) === Fork(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4), List('e', 't', 'x'), 7))
+    new TestTrees {
+      assert(createCodeTree(dummyText.toCharArray.toList) === dummyCodeTree)
+    }
   }
 
   test("decode text") {
-//    assert(decode(createCodeTree("xtxextx".toCharArray.toList), List(0,1,1,0,1,0,0,1,1,0))==="xtxextx")
-    assert(decode(Fork(Leaf('x',4), Fork(Leaf('t',2), Leaf('e',1),List('e', 't'),3), List('e', 't', 'x'), 7), List(0,1,0,0,1,1,0,1,0)).mkString==="xtxext")
+    new TestTrees {
+      assert(decode(dummyCodeTree, List(0, 1, 0, 0, 1, 1, 0, 1, 0)).mkString === "xtxext")
+    }
   }
 }

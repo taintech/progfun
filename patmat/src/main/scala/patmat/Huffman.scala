@@ -43,7 +43,7 @@ object Huffman {
   }
 
   def makeCodeTree(left: CodeTree, right: CodeTree) =
-    Fork(left, right, chars(left) ::: chars(right), weight(left) + weight(right))
+    Fork(left, right, (chars(left) ::: chars(right)).sorted, weight(left) + weight(right))
 
 
 
@@ -117,7 +117,7 @@ object Huffman {
    * unchanged.
    */
   def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
-    case left :: right :: ts => makeCodeTree(left, right) :: ts
+    case right :: left :: ts => makeCodeTree(left, right) :: ts
     case _ => trees
   }
 
@@ -164,17 +164,11 @@ object Huffman {
    */
   def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
     @tailrec
-    def loop(loopTree: CodeTree, loopBits: List[Bit], agg: List[Char]): List[Char] = {
-      println("loop bits: "+ loopBits)
-      println("loop tree: "+ loopTree)
-      println("loop agg: "+ agg)
-      println("--------------------")
-      (loopBits, loopTree) match {
-        case (bit::bs, Leaf(char, _)) => loop(tree, bit::bs, char::agg)
-        case (Nil, Leaf(char, _)) => char :: agg
-        case (bit::bs, Fork(left, right, _, _)) => loop(if(bit==0) left else right, bs, agg)
-        case _ => throw new UnsupportedOperationException("WTF! What a terrible failure!")
-      }
+    def loop(loopTree: CodeTree, loopBits: List[Bit], agg: List[Char]): List[Char] = (loopBits, loopTree) match {
+      case (bit::bs, Leaf(char, _)) => loop(tree, bit::bs, char::agg)
+      case (Nil, Leaf(char, _)) => char :: agg
+      case (bit::bs, Fork(left, right, _, _)) => loop(if(bit==0) left else right, bs, agg)
+      case _ => throw new IllegalArgumentException("WTF! Something from input is wrong!")
     }
     loop(tree, bits, List.empty).reverse
   }
