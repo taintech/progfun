@@ -117,7 +117,9 @@ object Huffman {
    * unchanged.
    */
   def combine(trees: List[CodeTree]): List[CodeTree] = trees match {
-    case right :: left :: ts => makeCodeTree(left, right) :: ts
+    case tree1 :: tree2 :: ts =>
+      if(weight(tree1)>weight(tree2)) ts++(makeCodeTree(tree1, tree2)::Nil)
+      else ts++(makeCodeTree(tree2, tree1)::Nil)
     case _ => trees
   }
 

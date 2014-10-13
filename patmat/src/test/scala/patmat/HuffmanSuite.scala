@@ -20,6 +20,7 @@ class HuffmanSuite extends FunSuite {
     val dummyText = "xtxextx"
     val dummyCodeTree = Fork(Leaf('x', 4), Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3), List('e', 't', 'x'), 7)
     val dummyCodeTable: CodeTable = List(('e', List(1,1)), ('t', List(1,0)), ('x', List(0)))
+    val dummySecret = List(0, 1, 0, 0, 1, 1, 0, 1, 0)
   }
 
   test("weight of a larger tree") {
@@ -44,7 +45,7 @@ class HuffmanSuite extends FunSuite {
 
   test("combine of some leaf list") {
     new TestTrees {
-      assert(combine(leaflist) === List(Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3), Leaf('x', 4)))
+      assert(combine(leaflist) === List(Leaf('x', 4), Fork(Leaf('t', 2), Leaf('e', 1), List('e', 't'), 3)))
     }
   }
 
@@ -87,13 +88,13 @@ class HuffmanSuite extends FunSuite {
 
   test("decode text") {
     new TestTrees {
-      assert(decode(dummyCodeTree, List(0, 1, 0, 0, 1, 1, 0, 1, 0)).mkString === "xtxext")
+      assert(decode(dummyCodeTree, dummySecret).mkString === "xtxext")
     }
   }
 
   test("encode text") {
     new TestTrees {
-      assert(encode(dummyCodeTree)(string2Chars("xtxext")) === List(0, 1, 0, 0, 1, 1, 0, 1, 0))
+      assert(encode(dummyCodeTree)(string2Chars("xtxext")) === dummySecret)
       assert(encode(frenchCode)(decodedSecret) === secret)
     }
   }
@@ -110,7 +111,7 @@ class HuffmanSuite extends FunSuite {
 
   test("quick encode text") {
     new TestTrees {
-      assert(quickEncode(dummyCodeTree)(string2Chars("xtxext")) === List(0, 1, 0, 0, 1, 1, 0, 1, 0))
+      assert(quickEncode(dummyCodeTree)(string2Chars("xtxext")) === dummySecret)
       assert(quickEncode(frenchCode)(decodedSecret) === secret)
     }
   }
