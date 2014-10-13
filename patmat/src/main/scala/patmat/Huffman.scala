@@ -10,6 +10,10 @@ import scala.annotation.tailrec
  */
 object Huffman {
 
+  def main(args: Array[String]): Unit ={
+    Console println decodedSecret.mkString
+  }
+
   /**
    * A huffman code is represented by a binary tree.
    *
@@ -158,7 +162,22 @@ object Huffman {
    * This function decodes the bit sequence `bits` using the code tree `tree` and returns
    * the resulting list of characters.
    */
-  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = ???
+  def decode(tree: CodeTree, bits: List[Bit]): List[Char] = {
+    @tailrec
+    def loop(loopTree: CodeTree, loopBits: List[Bit], agg: List[Char]): List[Char] = {
+      println("loop bits: "+ loopBits)
+      println("loop tree: "+ loopTree)
+      println("loop agg: "+ agg)
+      println("--------------------")
+      (loopBits, loopTree) match {
+        case (bit::bs, Leaf(char, _)) => loop(tree, bit::bs, char::agg)
+        case (Nil, Leaf(char, _)) => char :: agg
+        case (bit::bs, Fork(left, right, _, _)) => loop(if(bit==0) left else right, bs, agg)
+        case _ => throw new UnsupportedOperationException("WTF! What a terrible failure!")
+      }
+    }
+    loop(tree, bits, List.empty).reverse
+  }
 
   /**
    * A Huffman coding tree for the French language.
@@ -176,7 +195,7 @@ object Huffman {
   /**
    * Write a function that returns the decoded secret
    */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
 
 
